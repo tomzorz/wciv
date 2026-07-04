@@ -126,29 +126,45 @@ export async function fetchArticleMainImage(
 
 const IMAGE_EXT = 'jpe?g|png|gif|svg|webp|tiff?'
 
-/** Extract the first (lead/infobox) image filename from article wikitext. */
+/**
+ * Extract the first (lead/infobox) image filename from article wikitext.
+ * Language-agnostic: finds the first token that looks like an image filename
+ * ("something.jpg" etc.). Wiki filenames cannot contain / : # < > [ ] | { },
+ * which conveniently rules out URLs.
+ */
 export function extractLeadImage(wikitext: string): string | undefined {
-  const patterns = [
-    new RegExp(`\\b(?:File|Image)\\s*:\\s*([^|\\]{}\\n]+?\\.(?:${IMAGE_EXT}))`, 'i'),
-    new RegExp(
-      `\\|\\s*(?:image|image_name|img|logo|photo)\\d*\\s*=\\s*([^|\\n{}\\[\\]]+?\\.(?:${IMAGE_EXT}))\\s*(?:[|\\n}])`,
-      'i',
-    ),
-  ]
-  let best: { index: number; name: string } | undefined
-  for (const re of patterns) {
-    const m = re.exec(wikitext)
-    if (m && (best === undefined || m.index < best.index)) {
-      best = { index: m.index, name: m[1] }
-    }
-  }
-  return best ? normalizeFileName(best.name) : undefined
+  const re = new RegExp(
+    `(?:^|[|=:\\[\\n])[ \\t]*([^|\\[\\]{}\\n=:/#<>]+\\.(?:${IMAGE_EXT}))\\b`,
+    'gi',
+  )
+  const m = re.exec(wikitext)
+  if (!m) return undefined
+  const name = m[1].trim()
+  if (!name || name.startsWith('.')) return undefined
+  return normalizeFileName(name)
 }
 
 export function normalizeFileName(name: string): string {
   const clean = name.replace(/^(File|Image):/i, '').replace(/_/g, ' ').trim()
   if (!clean) return clean
   return clean[0].toUpperCase() + clean.slice(1)
+}
+
+/** Check whether a file page exists (locally or on Commons). */
+async function fileExists(host: string, fileTitle: string): Promise<boolean> {
+  try {
+    const data = await apiGet(host, {
+      action: 'query',
+      titles: fileTitle,
+      prop: 'imageinfo',
+      iiprop: 'url',
+      iilimit: '1',
+    })
+    const page: any = Object.values(data?.query?.pages ?? {})[0]
+    return Boolean(page?.imageinfo?.length)
+  } catch {
+    return false
+  }
 }
 
 export interface ArticleImageChange {
@@ -161,6 +177,7 @@ export interface ArticleImageChange {
 /**
  * Walk an article's revision history (lead section wikitext) to find the most
  * recent revision where the lead image was a *different file* than today's.
+ * Skips previous images that have since been deleted from Commons.
  * Returns null if no change was found within `maxRevisions`.
  */
 export async function findArticleImageChange(
@@ -175,6 +192,7 @@ export async function findArticleImageChange(
   let fetched = 0
   // timestamp of the newest revision that still shows the current image
   let changedAt = new Date().toISOString()
+  const missing = new Set<string>()
 
   while (fetched < maxRevisions) {
     const params: Record<string, string> = {
@@ -200,15 +218,20 @@ export async function findArticleImageChange(
       if (typeof wikitext !== 'string') continue
       const lead = extractLeadImage(wikitext)
       if (!lead) continue
-      if (lead.toLowerCase() === currentName.toLowerCase()) {
+      const key = lead.toLowerCase()
+      if (key === currentName.toLowerCase()) {
         changedAt = rev.timestamp
-      } else {
-        return {
-          currentFile,
-          previousFile: `File:${lead}`,
-          changedAt,
-          previousUntil: rev.timestamp,
+      } else if (!missing.has(key)) {
+        if (await fileExists(host, `File:${lead}`)) {
+          return {
+            currentFile,
+            previousFile: `File:${lead}`,
+            changedAt,
+            previousUntil: rev.timestamp,
+          }
         }
+        // deleted from Commons — skip and keep walking further back
+        missing.add(key)
       }
       if (fetched >= maxRevisions) break
     }

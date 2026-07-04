@@ -4,6 +4,7 @@
 | Date | Source | What Went Wrong | What To Do Instead |
 |------|--------|----------------|-------------------|
 | 2026-07-02 | self | `npm create vite .` cancels itself in non-empty dir (LICENSE/.git present) | Write project files manually or scaffold in temp dir |
+| 2026-07-04 | self | git commit failed with "1Password: failed to fill whole buffer" — commit signing via 1Password, vault was locked | Ask user to unlock 1Password, then retry; commits may hang ~60s waiting for the prompt |
 
 ## User Preferences
 - Do NOT commit until user explicitly approves — they want to iterate first
