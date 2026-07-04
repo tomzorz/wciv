@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>wciv — wikimedia commons improvement viewer</title>
+    <meta
+      name="description"
+      content="Compare Wikimedia images side by side: see how a Wikipedia article's lead image changed, or compare any two Wikimedia Commons files — with shareable permalinks, PNG export, and proper creator attribution."
+    />
+    <meta name="theme-color" content="#111318" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+
+    <!-- Deployed at GitHub Pages; update these if the site moves to a custom domain -->
+    <link rel="canonical" href="https://tomzorz.github.io/wciv/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="wciv" />
+    <meta property="og:title" content="wciv — wikimedia commons improvement viewer" />
+    <meta
+      property="og:description"
+      content="Compare Wikimedia images side by side: article lead image changes or any two Commons files, with shareable links and creator attribution."
+    />
+    <meta property="og:url" content="https://tomzorz.github.io/wciv/" />
+    <meta property="og:image" content="https://tomzorz.github.io/wciv/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="wciv — wikimedia commons improvement viewer" />
+    <meta
+      name="twitter:description"
+      content="Compare Wikimedia images side by side: article lead image changes or any two Commons files, with shareable links and creator attribution."
+    />
+    <meta name="twitter:image" content="https://tomzorz.github.io/wciv/og.png" />
+
+    <link rel="preconnect" href="https://commons.wikimedia.org" crossorigin />
+    <link rel="preconnect" href="https://en.wikipedia.org" crossorigin />
+    <link rel="preconnect" href="https://upload.wikimedia.org" crossorigin />
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>wciv needs JavaScript — it talks to the Wikimedia API from your browser.</noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
