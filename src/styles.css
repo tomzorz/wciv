@@ -1,0 +1,276 @@
+:root {
+  color-scheme: dark;
+  --bg: #111318;
+  --panel: #1a1d24;
+  --text: #e8eaf0;
+  --muted: #9aa3b2;
+  --accent: #4f9cf9;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.app {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+header h1 {
+  font-size: 1.4rem;
+  margin: 0 0 1.5rem;
+}
+
+.brand {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 800;
+}
+
+.tagline {
+  color: var(--muted);
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+a {
+  color: var(--accent);
+}
+
+.forms {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid #2a2e38;
+  border-radius: 12px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.card h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+input {
+  background: var(--bg);
+  border: 1px solid #333845;
+  border-radius: 8px;
+  color: var(--text);
+  padding: 0.6rem 0.75rem;
+  font-size: 0.95rem;
+}
+
+input:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
+}
+
+button,
+.button-link {
+  background: var(--accent);
+  color: #0b0d11;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.button-link {
+  background: #2a2e38;
+  color: var(--text);
+}
+
+.status {
+  padding: 3rem 0;
+  text-align: center;
+  color: var(--muted);
+}
+
+.status.error p {
+  color: #f88;
+}
+
+.result {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.result-heading {
+  font-size: 1.1rem;
+  margin: 0;
+  word-break: break-word;
+}
+
+/* --- side-by-side panes --- */
+.panes {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  align-items: start;
+}
+
+.pane {
+  margin: 0;
+  background: var(--panel);
+  border: 1px solid #2a2e38;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.pane-label {
+  padding: 0.6rem 0.9rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  word-break: break-word;
+}
+
+.pane-date {
+  color: var(--muted);
+  font-weight: 400;
+  font-size: 0.85rem;
+}
+
+.pane-img {
+  display: block;
+  width: 100%;
+  max-height: 65vh;
+  object-fit: contain;
+  background: #000;
+}
+
+.pane figcaption {
+  padding: 0.6rem 0.9rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+button.secondary {
+  background: #2a2e38;
+  color: var(--text);
+}
+
+/* --- compare slider --- */
+.compare {
+  position: relative;
+  user-select: none;
+  touch-action: none;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #000;
+  cursor: ew-resize;
+}
+
+.compare-img {
+  display: block;
+  width: 100%;
+  max-height: 75vh;
+  object-fit: contain;
+}
+
+.compare-before {
+  position: absolute;
+  inset: 0;
+}
+
+.compare-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: #fff;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.compare-handle-grip {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  color: #111;
+  border-radius: 999px;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  font-size: 1.1rem;
+}
+
+.compare-label {
+  position: absolute;
+  top: 10px;
+  background: rgba(0, 0, 0, 0.65);
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  pointer-events: none;
+}
+
+.compare-label-left {
+  left: 10px;
+}
+
+.compare-label-right {
+  right: 10px;
+}
+
+.credits {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+footer {
+  margin-top: auto;
+  padding-top: 2.5rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
